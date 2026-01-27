@@ -1,0 +1,14 @@
+import copy
+nested_list=[[1,2,3],[2,3,4]]
+# shallow copy
+# It will refer same memory location
+new_list=copy.copy(nested_list)
+nested_list[0][0]=9
+print("Shallow copy",nested_list,new_list)
+import copy
+nested_list=[[1,2,3],[2,3,4]]
+# deep copy
+#It will reffer separate memory location.
+new_list=copy.deepcopy(nested_list)
+nested_list[0][0]=9
+print("Deep copy",nested_list,new_list)
