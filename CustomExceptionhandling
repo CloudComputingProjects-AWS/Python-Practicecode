@@ -1,0 +1,21 @@
+class InvalidError(Exception):
+    pass
+
+def bill(flavour, cupsqty):
+    menu={"masala": 20, "ginger": 30, "lemon": 25}
+    try:
+        if flavour not in menu:
+            raise InvalidError(f"{flavour} not available.")
+        if  not isinstance(cupsqty, int) :
+            raise TypeError(f"{cupsqty} is not a valid quantity.")
+        totalbill= menu[flavour] * cupsqty
+        print(f"Total bill for {cupsqty} cups of {flavour} tea is: {totalbill}") 
+    except Exception as e:
+        print(f"Error: {e}")
+    finally:
+        print("Thank you for visiting our tea store!")    
+
+
+bill("mint", 2)    
+bill("masala", "five")    
+bill("ginger", 3)   
