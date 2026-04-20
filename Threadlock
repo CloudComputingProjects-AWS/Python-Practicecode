@@ -1,0 +1,18 @@
+import threading
+
+counter=0
+lock=threading.Lock()
+
+
+def increment():
+    global counter
+    for _ in range(100000):
+        with lock:
+            counter+=1
+        
+threads=[ threading.Thread(target=increment) for _ in range(10)]    
+[th.start() for th in threads]  
+[th.join() for th in threads]      
+
+
+print(f"Final counter value: {counter}")
