@@ -1,0 +1,58 @@
+import asyncio
+import time
+from concurrent.futures import ThreadPoolExecutor
+"""
+This code shows how to run a blocking normal function inside an asyncio program without blocking the event loop.
+check_inventory() is a regular synchronous function and contains time.sleep(2), which blocks for 2 seconds.
+
+Instead of calling it directly inside async def main(), the code uses:
+	loop.run_in_executor(...)
+so that the blocking function runs in a separate thread.
+        asyncio.run(main())
+                |
+                v
+        main() starts
+                |
+                v
+        get running event loop
+                |
+                v
+        create ThreadPoolExecutor
+                |
+                v
+        run check_inventory("kids frocks") in worker thread
+                |
+                v
+        worker thread:
+            print start message
+            sleep 2 sec
+            print stock message
+            return result
+                |
+                v
+        main() receives result using await
+                |
+                v
+        print result
+        print total time
+"""
+def check_inventory(item: str) -> str:
+    print(f"Checking inventory for {item}...")
+    time.sleep(2) #Blocking operation simulating inventory check
+    print(f"{item} is in stock.")
+    return f"{item} stock is 42."
+
+async def main():
+    # This gets the currently running asyncio event loop.
+    loop = asyncio.get_running_loop()
+    # This creates a pool of worker threads.
+    # The blocking function will be sent to
+    # one of these threads so the asyncio event loop can stay free.
+    with ThreadPoolExecutor() as pool:
+        start = time.time()
+        result=await loop.run_in_executor(pool, check_inventory, "kids frocks")
+        print(result)
+        end = time.time()
+        print(f"Total time taken: {end - start:.2f} seconds")
+
+asyncio.run(main())        
