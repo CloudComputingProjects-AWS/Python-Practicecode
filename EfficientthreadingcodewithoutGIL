@@ -1,0 +1,26 @@
+import threading
+import time
+import requests
+#Since memory locations are different for different images;GIL is not in place here; hence it's considered efficient coding
+def download_images(url):
+    print(f"Downloading images from {url}...")
+    response = requests.get(url)
+    if response.status_code == 200:
+        print(f"Downloaded images from {url}")
+    else:
+        print(f"Failed to download images from {url}")
+
+urls=["https://httpbin.org/image/jpeg", "https://httpbin.org/image/png", "https://httpbin.org/image/svg"]        
+start=time.time()
+threads=[]
+for url in urls:
+    t=threading.Thread(target=download_images, args=(url,))
+    t.start()
+    t.join()
+    threads.append(t)
+
+for th in threads:
+    th.join()
+
+end=time.time()
+print(f"Total time taken: {end-start:.2f} seconds for downloading images")        
